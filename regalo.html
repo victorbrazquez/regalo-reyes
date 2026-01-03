@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Regalo Reyes María</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    text-align: center;
+}
+
+/* CONTENEDOR GENERAL */
+.container {
+    height: 100vh;
+}
+
+/* PANTALLAS */
+.screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-size: cover;
+    background-position: center;
+}
+
+/* TARJETAS SEMITRANSPARENTES PARA LOS TEXTOS */
+.text-card {
+    background: rgba(0, 0, 0, 0.4); /* negro semi-transparente */
+    padding: 15px 25px;
+    border-radius: 15px;
+    margin: 10px 0;
+    max-width: 90%;
+}
+
+/* SOMBRA SUAVE PARA TEXTOS */
+.text-card p, .text-card h1 {
+    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+/* TEXTOS NORMALES MÁS GRANDES Y VISIBLES */
+.text-card p {
+    font-weight: 400;
+    font-size: 20px;
+    color: white;
+    margin: 5px 0;
+}
+
+/* TITULOS */
+.text-card h1 {
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 28px;
+    margin: 10px 0;
+}
+
+/* FONDOS */
+#intro {
+    background-image: url("foto1.jpg");
+}
+
+#surprise {
+    background-image: url("foto2.jpg");
+}
+
+/* REGALO */
+#gift {
+    font-size: 120px;
+    cursor: pointer;
+    animation: bounce 1.5s infinite;
+    margin: 20px 0;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+.hidden {
+    display: none;
+}
+
+/* ANIMACIÓN DE REVELADO */
+.reveal {
+    animation: fadeIn 1s ease-in forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* BOTÓN */
+.button {
+    margin-top: 25px;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 25px;
+    background-color: #ffcc00;
+    color: #000;
+    cursor: pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- INTRO -->
+    <div id="intro" class="screen">
+        <div class="text-card">
+            <p>✨ Este año los Reyes han sido un poco extremos... 🤣</p>
+        </div>
+        <div id="gift">🎁</div>
+        <div class="text-card">
+            <p>Pulsa el regalo para descubrir tu regalo de Navidad</p>
+        </div>
+    </div>
+
+    <!-- SORPRESA -->
+    <div id="surprise" class="screen hidden">
+        <div class="text-card">
+            <h1>🪂 ¡SALTO EN PARACAÍDAS! 🪂</h1>
+            <p>Esperamos que hayamos cumplido uno de tus deseos.</p>
+			<p> </p>
+            <p>Una experiencia inolvidable te espera, ¡que la disfrutes! 💙</p>
+            <button class="button" onclick="verVale()">Ver mi vale</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- AUDIOS -->
+<audio id="popSound" src="pop.mp3" preload="auto"></audio>
+<audio id="bgMusic" src="musica.mp3" preload="auto" loop></audio>
+
+<script>
+const gift = document.getElementById("gift");
+const intro = document.getElementById("intro");
+const surprise = document.getElementById("surprise");
+
+const popSound = document.getElementById("popSound");
+const bgMusic = document.getElementById("bgMusic");
+
+bgMusic.volume = 0;        // empieza en silencio
+popSound.volume = 0.8;
+
+let musicStarted = false;
+
+gift.addEventListener("click", function() {
+
+    // Iniciar música con fade-in
+    if (!musicStarted) {
+        bgMusic.play().catch(() => {});
+        fadeInMusic(bgMusic, 0.3, 4000); // volumen final, duración ms
+        musicStarted = true;
+    }
+
+    // Sonido pop
+    popSound.currentTime = 0;
+    popSound.play();
+
+    // Cambio de pantalla
+    intro.classList.add("hidden");
+    surprise.classList.remove("hidden");
+    surprise.classList.add("reveal");
+});
+
+// Función fade-in de música
+function fadeInMusic(audio, targetVolume, duration) {
+    const steps = 40;
+    const stepTime = duration / steps;
+    const volumeStep = targetVolume / steps;
+
+    let currentStep = 0;
+
+    const fadeInterval = setInterval(() => {
+        currentStep++;
+        audio.volume = Math.min(audio.volume + volumeStep, targetVolume);
+
+        if (currentStep >= steps) {
+            audio.volume = targetVolume;
+            clearInterval(fadeInterval);
+        }
+    }, stepTime);
+}
+
+// Abrir PDF del regalo
+function verVale() {
+    window.open("vale.pdf", "_blank");
+}
+</script>
+
+</body>
+</html>
